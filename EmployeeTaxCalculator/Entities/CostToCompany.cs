@@ -31,17 +31,17 @@ namespace Project1.Entities
         {
             get
             {
-                var taxableDeductionsValue = 0m;
+                var taxDeductiblesValue = 0m;
 
                 foreach (var deduction in Deductions)
                 {
-                    if (deduction.Taxable)
+                    if (!deduction.Taxable)
                     {
-                        taxableDeductionsValue += deduction.Amount;
+                        taxDeductiblesValue += deduction.Amount;
                     }
                 }
 
-                return GrossSalary - taxableDeductionsValue;
+                return GrossSalary - taxDeductiblesValue;
             }
         }
 
