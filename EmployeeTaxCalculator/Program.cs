@@ -9,7 +9,7 @@ namespace EmployeeTaxCalculator
         static void Main(string[] args)
         {
 
-            var year = 2019;
+            var year = 2020;
 
             var employee = new Employee
             {
