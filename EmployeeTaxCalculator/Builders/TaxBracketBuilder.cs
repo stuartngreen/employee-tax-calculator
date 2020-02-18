@@ -1,21 +1,29 @@
-﻿using System;
+﻿using EmployeeTaxCalculator.Entities;
 using System.Collections.Generic;
-using System.Text;
 
 namespace EmployeeTaxCalculator.Builders
 {
     class TaxBracketBuilder
     {
-        public TaxBracketBuilder AddBracket()
+        private List<TaxBracket> TaxBrackets = new List<TaxBracket>();
+
+        public TaxBracketBuilder AddBracket(decimal lowerLimit, decimal upperLimit, decimal taxRate)
         {
-            // TODO
+            var taxBracket = new TaxBracket
+            {
+                LowerLimit = lowerLimit,
+                UpperLimit = upperLimit,
+                TaxRate = taxRate
+            };
+
+            TaxBrackets.Add(taxBracket);
+
             return this;
         }
 
-        public List<dynamic> Build()
+        public List<TaxBracket> Build()
         {
-            // TODO
-            return null;
+            return TaxBrackets;
         }
     }
 }

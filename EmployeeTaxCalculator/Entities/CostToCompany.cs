@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using EmployeeTaxCalculator.Builders;
 
 namespace EmployeeTaxCalculator.Entities
 {
@@ -45,21 +46,7 @@ namespace EmployeeTaxCalculator.Entities
 
         public decimal GetAnnualTax(int year)
         {
-
-            // TODO: get tax bracket using 'year'
-            var taxBrackets = new TaxBracket[]
-            {
-                new TaxBracket { LowerLimit = 0m, UpperLimit = 195850m, TaxRate = 18m },
-                new TaxBracket { LowerLimit = 195850.01m, UpperLimit = 305850m, TaxRate = 26m },
-                new TaxBracket { LowerLimit = 305850.01m, UpperLimit = 423300m, TaxRate = 31m },
-                new TaxBracket { LowerLimit = 423300.01m, UpperLimit = 555600m, TaxRate = 36m },
-                new TaxBracket { LowerLimit = 555600.01m, UpperLimit = 708310m, TaxRate = 39m },
-                new TaxBracket { LowerLimit = 708310.01m, UpperLimit = 1500000m, TaxRate = 41m },
-                new TaxBracket { LowerLimit = 1500000.01m, UpperLimit = decimal.MaxValue, TaxRate = 45m }
-            };
-
-            //TODO: new TaxBracketBuilder().AddBracket().AddBracket().AddBracket().Build();
-
+            var taxBrackets = GetTaxBrackets(year);
             var taxableAnnualIncome = TaxableValue * 12;
             var taxValue = 0m;
 
@@ -84,7 +71,18 @@ namespace EmployeeTaxCalculator.Entities
             return GetAnnualTax(year) / 12;
         }
 
-        // TODO: getTaxBrackets(int year)
+        public List<TaxBracket> GetTaxBrackets(int year)
+        {
+            return new TaxBracketBuilder()
+                .AddBracket(0m, 195850m, 18m)
+                .AddBracket(195850.01m, 305850m, 26m)
+                .AddBracket(305850.01m, 423300m, 31m)
+                .AddBracket(423300.01m, 555600m, 36m)
+                .AddBracket(555600.01m, 708310m, 39m)
+                .AddBracket(708310.01m, 1500000m, 41m)
+                .AddBracket(1500000.01m, decimal.MaxValue, 45m)
+                .Build();
+        }
 
     }
 }
