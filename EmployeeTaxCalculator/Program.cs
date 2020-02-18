@@ -1,15 +1,15 @@
-﻿using Project1.Entities;
+﻿using EmployeeTaxCalculator.Entities;
 using System;
 using System.Collections.Generic;
 
-namespace Project1
+namespace EmployeeTaxCalculator
 {
     class Program
     {
         static void Main(string[] args)
         {
 
-            int year = 2019;
+            var year = 2019;
 
             var employee = new Employee
             {
@@ -20,34 +20,34 @@ namespace Project1
                 CostToCompany = new CostToCompany
                 {
                     Value = 40000m,
-                    Benefits = new List<Triple>()
+                    Benefits = new List<Benefit>()
                     {
-                        new Triple() {
+                        new Benefit() {
                             Name = "Medical Aid",
                             Amount = 2500m,
                             Taxable = false
                         },
-                        new Triple() {
+                        new Benefit() {
                             Name = "Pension (Company)",
                             Amount = 2000m,
                             Taxable = false
                         },
                     },
-                    Deductions = new List<Triple>()
+                    Deductions = new List<Deduction>()
                     {
-                        new Triple()
+                        new Deduction()
                         {
                             Name = "Pension (Employee)",
                             Amount = 2000m,
                             Taxable = false
                         },
-                        new Triple()
+                        new Deduction()
                         {
                             Name = "Discovery Vitality",
                             Amount = 250m,
                             Taxable = true
                         },
-                        new Triple()
+                        new Deduction()
                         {
                             Name = "Parking",
                             Amount = 150m,

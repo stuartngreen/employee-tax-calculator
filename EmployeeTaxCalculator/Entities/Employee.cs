@@ -1,4 +1,4 @@
-﻿namespace Project1.Entities
+﻿namespace EmployeeTaxCalculator.Entities
 {
     public class Employee
     {

@@ -1,16 +1,14 @@
-﻿using Project1.Entities;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Project1.Entities
+namespace EmployeeTaxCalculator.Entities
 {
     public class CostToCompany
     {
         public decimal Value { get; set; }
 
-        public List<Triple> Benefits { get; set; }
+        public List<Benefit> Benefits { get; set; }
 
-        public List<Triple> Deductions { get; set; }
+        public List<Deduction> Deductions { get; set; }
 
         public decimal GrossSalary
         {
@@ -49,7 +47,7 @@ namespace Project1.Entities
         {
 
             // TODO: get tax bracket using 'year'
-            TaxBracket[] taxBrackets = new TaxBracket[]
+            var taxBrackets = new TaxBracket[]
             {
                 new TaxBracket { LowerLimit = 0m, UpperLimit = 195850m, TaxRate = 18m },
                 new TaxBracket { LowerLimit = 195850.01m, UpperLimit = 305850m, TaxRate = 26m },
@@ -60,8 +58,10 @@ namespace Project1.Entities
                 new TaxBracket { LowerLimit = 1500000.01m, UpperLimit = decimal.MaxValue, TaxRate = 45m }
             };
 
-            decimal taxableAnnualIncome = TaxableValue * 12;
-            decimal taxValue = 0;
+            //TODO: new TaxBracketBuilder().AddBracket().AddBracket().AddBracket().Build();
+
+            var taxableAnnualIncome = TaxableValue * 12;
+            var taxValue = 0m;
 
             foreach (var taxBracket in taxBrackets)
             {
@@ -83,6 +83,8 @@ namespace Project1.Entities
         {
             return GetAnnualTax(year) / 12;
         }
+
+        // TODO: getTaxBrackets(int year)
 
     }
 }
