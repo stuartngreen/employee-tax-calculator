@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 using EmployeeTaxCalculator.Builders;
 
 namespace EmployeeTaxCalculator.Entities
@@ -42,33 +43,6 @@ namespace EmployeeTaxCalculator.Entities
 
                 return GrossSalary - taxDeductiblesValue;
             }
-        }
-
-        public decimal GetAnnualTax(int year)
-        {
-            var taxBrackets = GetTaxBrackets(year);
-            var taxableAnnualIncome = TaxableValue * 12;
-            var taxValue = 0m;
-
-            foreach (var taxBracket in taxBrackets)
-            {
-                if (taxableAnnualIncome <= taxBracket.UpperLimit)
-                {
-                    taxValue += (taxableAnnualIncome - taxBracket.LowerLimit) * taxBracket.TaxRate / 100;
-                    break;
-                }
-                else
-                {
-                    taxValue += (taxBracket.UpperLimit - taxBracket.LowerLimit) * taxBracket.TaxRate / 100;
-                }
-            }
-
-            return taxValue;
-        }
-
-        public decimal GetMonthlyTax(int year)
-        {
-            return GetAnnualTax(year) / 12;
         }
 
         public IEnumerable<TaxBracket> GetTaxBrackets(int year)
@@ -115,6 +89,65 @@ namespace EmployeeTaxCalculator.Entities
             };
 
             return dict[year];
+        }
+
+        public decimal GetAnnualPaye(int year)
+        {
+            var taxBrackets = GetTaxBrackets(year);
+            var annualTaxableValue = TaxableValue * 12;
+            var taxValue = 0m;
+
+            foreach (var taxBracket in taxBrackets)
+            {
+                if (annualTaxableValue <= taxBracket.UpperLimit)
+                {
+                    taxValue += (annualTaxableValue - taxBracket.LowerLimit) * taxBracket.TaxRate / 100;
+                    break;
+                }
+                else
+                {
+                    taxValue += (taxBracket.UpperLimit - taxBracket.LowerLimit) * taxBracket.TaxRate / 100;
+                }
+            }
+
+            return taxValue;
+        }
+
+        public decimal GetMonthlyPaye(int year)
+        {
+            return GetAnnualPaye(year) / 12;
+        }
+
+        public decimal GetUif()
+        {
+            const decimal MAX_EARNINGS_CEILING = 178464m;
+
+            if (GrossSalary < MAX_EARNINGS_CEILING)
+            {
+                return GrossSalary * 1 / 100;
+            }
+            else
+            {
+                return MAX_EARNINGS_CEILING * 1 / 100;
+            }
+        }
+
+        public decimal GetNetSalary(int year)
+        {
+            var deductionsValue = 0m;
+
+            foreach (var deduction in Deductions)
+            {
+                if (deduction.Taxable)
+                {
+                    deductionsValue += deduction.Amount;
+                }
+            }
+
+            deductionsValue += GetMonthlyPaye(year);
+            deductionsValue += GetUif();
+
+            return TaxableValue - deductionsValue;
         }
 
     }
