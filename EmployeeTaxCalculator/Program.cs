@@ -58,11 +58,11 @@ namespace EmployeeTaxCalculator
             };
 
             Console.WriteLine(
-                (int)Math.Ceiling(employee.CostToCompany.GetMonthlyPaye(year))
+                (int)Math.Ceiling(employee.CostToCompany.GetMonthlyPaye())
             );
 
             Console.WriteLine(
-                (int)Math.Ceiling(employee.CostToCompany.GetNetSalary(year))
+                (int)Math.Ceiling(employee.CostToCompany.GetNetSalary())
             );
 
         }

@@ -118,6 +118,11 @@ namespace EmployeeTaxCalculator.Entities
             return GetAnnualPaye(year) / 12;
         }
 
+        public decimal GetMonthlyPaye()
+        {
+            return GetAnnualPaye(DateTime.Today.Year) / 12;
+        }
+
         public decimal GetUif()
         {
             const decimal MAX_EARNINGS_CEILING = 178464m;
@@ -148,6 +153,11 @@ namespace EmployeeTaxCalculator.Entities
             deductionsValue += GetUif();
 
             return TaxableValue - deductionsValue;
+        }
+
+        public decimal GetNetSalary()
+        {
+            return GetNetSalary(DateTime.Today.Year);
         }
 
     }
