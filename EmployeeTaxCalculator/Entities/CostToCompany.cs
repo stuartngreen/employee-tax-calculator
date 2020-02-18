@@ -73,7 +73,7 @@ namespace EmployeeTaxCalculator.Entities
 
         public List<TaxBracket> GetTaxBrackets(int year)
         {
-            return new TaxBracketBuilder()
+            return new TaxBracketBuilder(year)
                 .AddBracket(0m, 195850m, 18m)
                 .AddBracket(195850.01m, 305850m, 26m)
                 .AddBracket(305850.01m, 423300m, 31m)
