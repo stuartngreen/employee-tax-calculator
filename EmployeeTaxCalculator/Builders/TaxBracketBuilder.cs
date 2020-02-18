@@ -7,11 +7,6 @@ namespace EmployeeTaxCalculator.Builders
     {
         private List<TaxBracket> TaxBrackets = new List<TaxBracket>();
 
-        public TaxBracketBuilder(int year)
-        {
-            // TODO: build list based on year and other factors
-        }
-
         public TaxBracketBuilder AddBracket(decimal lowerLimit, decimal upperLimit, decimal taxRate)
         {
             var taxBracket = new TaxBracket
