@@ -8,8 +8,10 @@ namespace EmployeeTaxCalculator.Test
     public class CostToCompanyTest
     {
         [Fact]
-        public void GetUif_ReturnsCorrectValue()
+        public void GetUif_ValidCtc_ReturnsCorrectValue()
         {
+            var expected = 354.995m;
+
             var ctc = new CostToCompany(new TaxBracketRepository())
             {
                 Value = 40000m,
@@ -26,7 +28,7 @@ namespace EmployeeTaxCalculator.Test
 
             var uif = ctc.GetUif();
 
-            Assert.Equal(354.995m, uif);
+            Assert.Equal(expected, uif);
         }
     }
 }
