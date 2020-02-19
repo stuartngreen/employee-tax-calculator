@@ -20,7 +20,7 @@ namespace EmployeeTaxCalculator.Entities
 
                 foreach (var benefit in Benefits)
                 {
-                    benefitsValue += benefit.Amount;
+                    benefitsValue += benefit.Value;
                 }
 
                 return Value - benefitsValue;
@@ -37,7 +37,7 @@ namespace EmployeeTaxCalculator.Entities
                 {
                     if (!deduction.Taxable)
                     {
-                        taxDeductiblesValue += deduction.Amount;
+                        taxDeductiblesValue += deduction.Value;
                     }
                 }
 
@@ -95,22 +95,22 @@ namespace EmployeeTaxCalculator.Entities
         {
             var taxBrackets = GetTaxBrackets(year);
             var annualTaxableValue = TaxableValue * 12;
-            var taxValue = 0m;
+            var payeValue = 0m;
 
             foreach (var taxBracket in taxBrackets)
             {
                 if (annualTaxableValue <= taxBracket.UpperLimit)
                 {
-                    taxValue += (annualTaxableValue - taxBracket.LowerLimit) * taxBracket.TaxRate / 100;
+                    payeValue += (annualTaxableValue - taxBracket.LowerLimit) * taxBracket.TaxRate / 100;
                     break;
                 }
                 else
                 {
-                    taxValue += (taxBracket.UpperLimit - taxBracket.LowerLimit) * taxBracket.TaxRate / 100;
+                    payeValue += (taxBracket.UpperLimit - taxBracket.LowerLimit) * taxBracket.TaxRate / 100;
                 }
             }
 
-            return taxValue;
+            return payeValue;
         }
 
         public decimal GetMonthlyPaye(int year)
@@ -145,7 +145,7 @@ namespace EmployeeTaxCalculator.Entities
             {
                 if (deduction.Taxable)
                 {
-                    deductionsValue += deduction.Amount;
+                    deductionsValue += deduction.Value;
                 }
             }
 

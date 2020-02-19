@@ -9,8 +9,6 @@ namespace EmployeeTaxCalculator
         static void Main(string[] args)
         {
 
-            var year = 2020;
-
             var employee = new Employee
             {
                 Id = 8001185051083,
@@ -24,12 +22,12 @@ namespace EmployeeTaxCalculator
                     {
                         new Benefit() {
                             Name = "Medical Aid",
-                            Amount = 2500m,
+                            Value = 2500m,
                             Taxable = false
                         },
                         new Benefit() {
                             Name = "Pension (Company)",
-                            Amount = 2000m,
+                            Value = 2000m,
                             Taxable = false
                         },
                     },
@@ -38,19 +36,19 @@ namespace EmployeeTaxCalculator
                         new Deduction()
                         {
                             Name = "Pension (Employee)",
-                            Amount = 2000m,
+                            Value = 2000m,
                             Taxable = false
                         },
                         new Deduction()
                         {
                             Name = "Discovery Vitality",
-                            Amount = 250m,
+                            Value = 250m,
                             Taxable = true
                         },
                         new Deduction()
                         {
                             Name = "Parking",
-                            Amount = 150m,
+                            Value = 150m,
                             Taxable = true
                         }
                     }
