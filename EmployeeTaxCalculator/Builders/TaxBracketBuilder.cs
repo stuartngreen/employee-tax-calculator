@@ -5,7 +5,7 @@ namespace EmployeeTaxCalculator.Builders
 {
     class TaxBracketBuilder
     {
-        private IList<TaxBracket> TaxBrackets = new List<TaxBracket>();
+        protected IList<TaxBracket> _taxBrackets = new List<TaxBracket>();
 
         public TaxBracketBuilder AddBracket(decimal lowerLimit, decimal upperLimit, decimal taxRate)
         {
@@ -16,14 +16,14 @@ namespace EmployeeTaxCalculator.Builders
                 TaxRate = taxRate
             };
 
-            TaxBrackets.Add(taxBracket);
+            _taxBrackets.Add(taxBracket);
 
             return this;
         }
 
         public IList<TaxBracket> Build()
         {
-            return TaxBrackets;
+            return _taxBrackets;
         }
     }
 }

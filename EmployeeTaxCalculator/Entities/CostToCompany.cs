@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
-using EmployeeTaxCalculator.Builders;
+using EmployeeTaxCalculator.Interfaces;
 
 namespace EmployeeTaxCalculator.Entities
 {
@@ -12,105 +12,66 @@ namespace EmployeeTaxCalculator.Entities
 
         public IList<Deduction> Deductions { get; set; }
 
-        public decimal GrossSalary
+        protected decimal _grossSalary
         {
             get
             {
-                var benefitsValue = 0m;
+                var totalBenefits = 0m;
 
                 foreach (var benefit in Benefits)
                 {
-                    benefitsValue += benefit.Value;
+                    totalBenefits += benefit.Value;
                 }
 
-                return Value - benefitsValue;
+                return Value - totalBenefits;
             }
         }
 
-        public decimal TaxableValue
+        protected decimal _taxableValue
         {
             get
             {
-                var taxDeductiblesValue = 0m;
+                var totalTaxDeductibles = 0m;
 
                 foreach (var deduction in Deductions)
                 {
                     if (!deduction.Taxable)
                     {
-                        taxDeductiblesValue += deduction.Value;
+                        totalTaxDeductibles += deduction.Value;
                     }
                 }
 
-                return GrossSalary - taxDeductiblesValue;
+                return _grossSalary - totalTaxDeductibles;
             }
         }
 
-        public IEnumerable<TaxBracket> GetTaxBrackets(int year)
+        protected readonly ITaxBracketRepository _taxBracketRepository;
+
+        public CostToCompany(ITaxBracketRepository taxBracketRepository)
         {
-            var dict = new Dictionary<int, IEnumerable<TaxBracket>>()
-            {
-
-                {
-                    2018,
-                    new TaxBracketBuilder()
-                        .AddBracket(0m, 189880m, 18m)
-                        .AddBracket(189880.01m, 296540m, 26m)
-                        .AddBracket(296540.01m, 410460m, 31m)
-                        .AddBracket(410460.01m, 555600m, 36m)
-                        .AddBracket(555600.01m, 708310m, 39m)
-                        .AddBracket(708310.01m, 1500000m, 41m)
-                        .AddBracket(1500000.01m, decimal.MaxValue, 45m)
-                        .Build()
-                },
-                {
-                    2019,
-                    new TaxBracketBuilder()
-                        .AddBracket(0m, 195850m, 18m)
-                        .AddBracket(195850.01m, 305850m, 26m)
-                        .AddBracket(305850.01m, 423300m, 31m)
-                        .AddBracket(423300.01m, 555600m, 36m)
-                        .AddBracket(555600.01m, 708310m, 39m)
-                        .AddBracket(708310.01m, 1500000m, 41m)
-                        .AddBracket(1500000.01m, decimal.MaxValue, 45m)
-                        .Build()
-                },
-                {
-                    2020,
-                    new TaxBracketBuilder()
-                        .AddBracket(0m, 195850m, 18m)
-                        .AddBracket(195850.01m, 305850m, 26m)
-                        .AddBracket(305850.01m, 423300m, 31m)
-                        .AddBracket(423300.01m, 555600m, 36m)
-                        .AddBracket(555600.01m, 708310m, 39m)
-                        .AddBracket(708310.01m, 1500000m, 41m)
-                        .AddBracket(1500000.01m, decimal.MaxValue, 45m)
-                        .Build()
-                }
-            };
-
-            return dict[year];
+            _taxBracketRepository = taxBracketRepository;
         }
 
         public decimal GetAnnualPaye(int year)
         {
             var taxBrackets = GetTaxBrackets(year);
-            var annualTaxableValue = TaxableValue * 12;
-            var payeValue = 0m;
+            var annualTaxableValue = _taxableValue * 12;
+            var paye = 0m;
 
             foreach (var taxBracket in taxBrackets)
             {
                 if (annualTaxableValue <= taxBracket.UpperLimit)
                 {
-                    payeValue += (annualTaxableValue - taxBracket.LowerLimit) * taxBracket.TaxRate / 100;
+                    paye += (annualTaxableValue - taxBracket.LowerLimit) * taxBracket.TaxRate / 100;
                     break;
                 }
                 else
                 {
-                    payeValue += (taxBracket.UpperLimit - taxBracket.LowerLimit) * taxBracket.TaxRate / 100;
+                    paye += (taxBracket.UpperLimit - taxBracket.LowerLimit) * taxBracket.TaxRate / 100;
                 }
             }
 
-            return payeValue;
+            return paye;
         }
 
         public decimal GetMonthlyPaye(int year)
@@ -127,9 +88,9 @@ namespace EmployeeTaxCalculator.Entities
         {
             const decimal MAX_EARNINGS_CEILING = 178464m;
 
-            if (GrossSalary < MAX_EARNINGS_CEILING)
+            if (_grossSalary < MAX_EARNINGS_CEILING)
             {
-                return GrossSalary * 1 / 100;
+                return _grossSalary * 1 / 100;
             }
             else
             {
@@ -139,25 +100,32 @@ namespace EmployeeTaxCalculator.Entities
 
         public decimal GetNetSalary(int year)
         {
-            var deductionsValue = 0m;
+            var totalDeductions = 0m;
 
             foreach (var deduction in Deductions)
             {
                 if (deduction.Taxable)
                 {
-                    deductionsValue += deduction.Value;
+                    totalDeductions += deduction.Value;
                 }
             }
 
-            deductionsValue += GetMonthlyPaye(year);
-            deductionsValue += GetUif();
+            totalDeductions += GetMonthlyPaye(year);
+            totalDeductions += GetUif();
 
-            return TaxableValue - deductionsValue;
+            return _taxableValue - totalDeductions;
         }
 
         public decimal GetNetSalary()
         {
             return GetNetSalary(DateTime.Today.Year);
+        }
+
+        private IEnumerable<TaxBracket> GetTaxBrackets(int year)
+        {
+            var dict = _taxBracketRepository.FindAll();
+
+            return dict[year];
         }
 
     }

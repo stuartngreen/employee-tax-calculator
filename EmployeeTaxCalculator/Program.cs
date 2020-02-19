@@ -1,4 +1,5 @@
 ﻿using EmployeeTaxCalculator.Entities;
+using EmployeeTaxCalculator.Repositories;
 using System;
 using System.Collections.Generic;
 
@@ -15,14 +16,14 @@ namespace EmployeeTaxCalculator
                 FirstName = "Stuart",
                 Surname = "Green",
                 Age = 39,
-                CostToCompany = new CostToCompany
+                CostToCompany = new CostToCompany(new TaxBracketRepository())
                 {
                     Value = 40000m,
                     Benefits = new List<Benefit>()
                     {
                         new Benefit() {
                             Name = "Medical Aid",
-                            Value = 2500m,
+                            Value = 2500.5m,
                             Taxable = false
                         },
                         new Benefit() {
@@ -54,7 +55,7 @@ namespace EmployeeTaxCalculator
                     }
                 }
             };
-
+            
             Console.WriteLine(
                 (int)Math.Ceiling(employee.CostToCompany.GetMonthlyPaye())
             );
@@ -62,6 +63,8 @@ namespace EmployeeTaxCalculator
             Console.WriteLine(
                 (int)Math.Ceiling(employee.CostToCompany.GetNetSalary())
             );
+
+            Console.WriteLine(employee.CostToCompany.GetUif());
 
         }
     }
