@@ -8,9 +8,17 @@ namespace EmployeeTaxCalculator.Test
     public class CostToCompanyTest
     {
         [Fact]
-        public void GetUif_ValidCtc_ReturnsCorrectValue()
+        public void GetUif_GivenLimitedParameters_ThrowsException()
         {
-            var expected = 354.995m;
+            var ctc = new CostToCompany(new TaxBracketRepository());
+
+            Assert.Throws<System.ArgumentNullException>(() => ctc.GetUif());
+        }
+
+        [Fact]
+        public void GetUif_GivenValueAndBenefits_ReturnsMaximumUifValue()
+        {
+            var expected = 148.72m;
 
             var ctc = new CostToCompany(new TaxBracketRepository())
             {
@@ -18,7 +26,7 @@ namespace EmployeeTaxCalculator.Test
                 Benefits = new List<Benefit>()
                 {
                     new Benefit() {
-                        Value = 2500.5m
+                        Value = 2500m
                     },
                     new Benefit() {
                         Value = 2000m
@@ -26,9 +34,7 @@ namespace EmployeeTaxCalculator.Test
                 }
             };
 
-            var uif = ctc.GetUif();
-
-            Assert.Equal(expected, uif);
+            Assert.Equal(expected, ctc.GetUif());
         }
     }
 }

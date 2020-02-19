@@ -16,6 +16,11 @@ namespace EmployeeTaxCalculator.Entities
         {
             get
             {
+                if (Benefits == null)
+                {
+                    throw new ArgumentNullException(nameof(Benefits));
+                }
+
                 var totalBenefits = 0m;
 
                 foreach (var benefit in Benefits)
@@ -86,7 +91,7 @@ namespace EmployeeTaxCalculator.Entities
 
         public decimal GetUif()
         {
-            const decimal MAX_EARNINGS_CEILING = 178464m;
+            const decimal MAX_EARNINGS_CEILING = 14872m;
 
             if (_grossSalary < MAX_EARNINGS_CEILING)
             {
