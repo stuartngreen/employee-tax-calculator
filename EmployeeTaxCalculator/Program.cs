@@ -9,7 +9,15 @@ namespace EmployeeTaxCalculator
         static void Main(string[] args)
         {
 
-            var paySlipBuilder = new PaySlipBuilder();
+            var employee = new Employee
+            {
+                Id = 8001185051083,
+                FirstName = "Stuart",
+                Surname = "Green",
+                Age = 40
+            };
+
+            var paySlipBuilder = new PaySlipBuilder(employee);
 
             paySlipBuilder.AddGrossSalary(40000);
             paySlipBuilder.AddMedicalAid(2500);

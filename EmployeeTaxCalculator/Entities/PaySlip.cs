@@ -7,14 +7,17 @@ namespace EmployeeTaxCalculator.Entities
 {
     public class PaySlip
     {
+        protected readonly Employee _employee;
+
         public decimal GrossSalary { get; set; }
 
         public IList<Benefit> BenefitItems { get; set; }
 
         public IList<Deduction> DeductionItems { get; set; }
 
-        public PaySlip()
+        public PaySlip(Employee employee)
         {
+            _employee = employee;
             BenefitItems = new List<Benefit>();
             DeductionItems = new List<Deduction>();
         }
@@ -25,6 +28,8 @@ namespace EmployeeTaxCalculator.Entities
             {
                 throw new ArgumentException(nameof(GrossSalary));
             }
+
+            // TODO: check _employee.Age and GrossSalary to see if tax is payable.
 
             var taxBracketsDictionary = new TaxBracketRepository().FindAll();
 

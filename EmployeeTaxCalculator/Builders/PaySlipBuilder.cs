@@ -8,9 +8,9 @@ namespace EmployeeTaxCalculator.Builders
     {
         protected PaySlip _paySlip;
 
-        public PaySlipBuilder()
+        public PaySlipBuilder(Employee employee)
         {
-            _paySlip = new PaySlip();
+            _paySlip = new PaySlip(employee);
         }
 
         public PaySlipBuilder AddGrossSalary(decimal value)
